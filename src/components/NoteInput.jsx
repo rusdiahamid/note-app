@@ -27,7 +27,7 @@ class NoteInput extends React.Component {
   onInput(event) {
     this.setState(() => {
       return {
-        body: event.target.innerHTML,
+        body: event.target.innerText,
       };
     });
   }

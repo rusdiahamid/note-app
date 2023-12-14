@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import parse from 'html-react-parser';
 import { showFormattedDate } from '../utils';
 import { ArchiveBox, ClockClockwise, Trash } from '@phosphor-icons/react';
 
@@ -7,7 +8,7 @@ const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive,
     <div className="detail-page">
       <h1 className="detail-page__title">{title}</h1>
       <div className="detail-page__createdAt">{showFormattedDate(createdAt)}</div>
-      <div className="detail-page__body">{body}</div>
+      <div className="detail-page__body">{parse(body)}</div>
       <div className="detail-page__action">
         <div className="action">
           <div className="action">

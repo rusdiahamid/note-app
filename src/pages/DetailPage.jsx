@@ -39,7 +39,7 @@ export class DetailPage extends React.Component {
   onUnArchive = (id) => {
     unarchiveNote(id);
 
-    this.props.navigate('/');
+    this.props.navigate('/archive');
   };
 
   render() {
