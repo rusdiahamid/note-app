@@ -3,10 +3,11 @@ import parse from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { showFormattedDate } from '../utils';
 
-function NotesList({ data }) {
+function NotesList({ notes, searchQuery }) {
+  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchQuery.toLowerCase()));
   return (
     <div className="notes-list">
-      {data.map((note) => {
+      {filteredNotes.map((note) => {
         return (
           <div
             className="note-item"
@@ -28,7 +29,8 @@ function NotesList({ data }) {
 }
 
 NotesList.propTypes = {
-  data: PropTypes.array,
+  notes: PropTypes.array.isRequired,
+  searchQuery: PropTypes.string,
 };
 
 export default NotesList;

@@ -1,32 +1,47 @@
-import { Link } from 'react-router-dom';
-import { Plus } from '@phosphor-icons/react';
+import React from 'react';
 import NotesList from '../components/NotesList';
 import { getActiveNotes } from '../utils/local-data';
+import SearchBar from '../components/SearchBar';
+import HomePageAction from '../components/HomePageAction';
 
-const HomePage = () => {
-  const notes = getActiveNotes();
+class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notes: getActiveNotes(),
+      searchQuery: '',
+    };
 
-  if (!notes.length) {
-    return (
-      <div className="notes-list-empty">
-        <p>Tidak ada catatan</p>
-      </div>
-    );
+    this.onSearch = this.onSearch.bind(this);
   }
 
-  return (
-    <>
-      <NotesList data={notes} />
-      <div className="homepage__action">
-        <Link
-          to="/new"
-          className="action"
-        >
-          <Plus size={32} />
-        </Link>
-      </div>
-    </>
-  );
-};
+  onSearch(searchQuery) {
+    this.setState({ searchQuery });
+  }
+
+  render() {
+    if (!this.state.notes.length) {
+      return (
+        <div className="notes-list-empty">
+          <p>Tidak ada catatan</p>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <SearchBar
+          page="Aktif"
+          onSearch={this.onSearch}
+        />
+        <NotesList
+          notes={this.state.notes}
+          searchQuery={this.state.searchQuery}
+        />
+        <HomePageAction />
+      </>
+    );
+  }
+}
 
 export default HomePage;

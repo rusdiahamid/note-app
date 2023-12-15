@@ -1,4 +1,5 @@
 import NotesList from '../components/NotesList';
+import SearchBar from '../components/SearchBar';
 import { getArchivedNotes } from '../utils/local-data';
 
 const ArchivePage = () => {
@@ -12,7 +13,12 @@ const ArchivePage = () => {
     );
   }
 
-  return <NotesList data={archivedNotes} />;
+  return (
+    <>
+      <SearchBar page="Arsip" />
+      <NotesList data={archivedNotes} />
+    </>
+  );
 };
 
 export default ArchivePage;
