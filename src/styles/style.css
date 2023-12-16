@@ -213,6 +213,19 @@ main {
   margin-top: 32px;
 }
 
+.modal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
 .toggle-theme,
 .toggle-locale {
   background-color: transparent;

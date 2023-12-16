@@ -47,12 +47,14 @@ export class DetailPage extends React.Component {
       return <p>Note tidak ditemukan!</p>;
     }
     return (
-      <NoteDetail
-        {...this.state.note}
-        onDelete={this.onDelete}
-        onArchive={this.onArchive}
-        onUnArchive={this.onUnArchive}
-      />
+      <>
+        <NoteDetail
+          {...this.state.note}
+          onDelete={this.onDelete}
+          onArchive={this.onArchive}
+          onUnArchive={this.onUnArchive}
+        />
+      </>
     );
   }
 }

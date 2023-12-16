@@ -5,6 +5,14 @@ import { showFormattedDate } from '../utils';
 
 function NotesList({ notes, searchQuery }) {
   const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  if (!filteredNotes.length) {
+    return (
+      <div className="notes-list-empty">
+        <p>Tidak ada catatan</p>
+      </div>
+    );
+  }
+
   return (
     <div className="notes-list">
       {filteredNotes.map((note) => {

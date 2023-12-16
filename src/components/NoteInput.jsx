@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FloppyDisk } from '@phosphor-icons/react';
+import Swal from 'sweetalert2';
 
 class NoteInput extends React.Component {
   constructor(props) {
@@ -34,6 +35,11 @@ class NoteInput extends React.Component {
 
   onSubmit(event) {
     event.preventDefault();
+    Swal.fire({
+      title: 'Sukses',
+      text: 'Catatan berhasil disimpan.',
+      icon: 'success',
+    });
     this.props.addNote(this.state);
   }
 

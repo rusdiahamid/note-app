@@ -1,24 +1,37 @@
+import React from 'react';
 import NotesList from '../components/NotesList';
-import SearchBar from '../components/SearchBar';
 import { getArchivedNotes } from '../utils/local-data';
+import SearchBar from '../components/SearchBar';
 
-const ArchivePage = () => {
-  const archivedNotes = getArchivedNotes();
+class ArchivePage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notes: getArchivedNotes(),
+      searchQuery: '',
+    };
 
-  if (!archivedNotes.length) {
-    return (
-      <div className="notes-list-empty">
-        <p>Tidak ada catatan</p>
-      </div>
-    );
+    this.onSearch = this.onSearch.bind(this);
   }
 
-  return (
-    <>
-      <SearchBar page="Arsip" />
-      <NotesList data={archivedNotes} />
-    </>
-  );
-};
+  onSearch(searchQuery) {
+    this.setState({ searchQuery });
+  }
+
+  render() {
+    return (
+      <>
+        <SearchBar
+          page="Arsip"
+          onSearch={this.onSearch}
+        />
+        <NotesList
+          notes={this.state.notes}
+          searchQuery={this.state.searchQuery}
+        />
+      </>
+    );
+  }
+}
 
 export default ArchivePage;

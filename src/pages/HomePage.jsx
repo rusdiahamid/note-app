@@ -20,14 +20,6 @@ class HomePage extends React.Component {
   }
 
   render() {
-    if (!this.state.notes.length) {
-      return (
-        <div className="notes-list-empty">
-          <p>Tidak ada catatan</p>
-        </div>
-      );
-    }
-
     return (
       <>
         <SearchBar
