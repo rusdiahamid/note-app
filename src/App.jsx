@@ -4,6 +4,8 @@ import AddNewPage from './pages/AddNewPage';
 import HomePage from './pages/HomePage';
 import ArchivePage from './pages/ArchivePage';
 import NotFound from './pages/NotFound';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -23,6 +25,14 @@ function App() {
         </header>
         <main>
           <Routes>
+            <Route
+              path="/register"
+              element={<RegisterPage />}
+            />
+            <Route
+              path="/login"
+              element={<LoginPage />}
+            />
             <Route
               path="/"
               element={<HomePage />}
