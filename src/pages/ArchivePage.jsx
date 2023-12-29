@@ -1,37 +1,59 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import NotesList from '../components/NotesList';
-import { getArchivedNotes } from '../utils/local-data';
 import SearchBar from '../components/SearchBar';
+import HomePageAction from '../components/HomePageAction';
+import { getArchivedNotes } from '../utils/api';
+import { useSearchParams } from 'react-router-dom';
 
-class ArchivePage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      notes: getArchivedNotes(),
-      searchQuery: '',
-    };
+const ArchivePage = () => {
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [keyword, setKeyword] = useState(() => {
+    return searchParams.get('keyword') || '';
+  });
 
-    this.onSearch = this.onSearch.bind(this);
+  useEffect(() => {
+    getArchivedNotes()
+      .then(({ data }) => {
+        setNotes(data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  function onKeywordChandeHandler(keyword) {
+    setKeyword(keyword);
+    setSearchParams({ keyword });
   }
 
-  onSearch(searchQuery) {
-    this.setState({ searchQuery });
-  }
-
-  render() {
-    return (
-      <>
-        <SearchBar
-          page="Arsip"
-          onSearch={this.onSearch}
-        />
-        <NotesList
-          notes={this.state.notes}
-          searchQuery={this.state.searchQuery}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <section>
+      <SearchBar
+        page="Arsip"
+        onSearch={onKeywordChandeHandler}
+      />
+      {loading ? (
+        <p>Loading</p>
+      ) : (
+        <>
+          {notes.length === 0 ? (
+            <p>empty</p>
+          ) : (
+            <NotesList
+              notes={notes}
+              searchQuery={keyword}
+            />
+          )}
+        </>
+      )}
+      <HomePageAction />
+    </section>
+  );
+};
 
 export default ArchivePage;

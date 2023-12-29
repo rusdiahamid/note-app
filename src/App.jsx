@@ -13,6 +13,7 @@ import { SignOut } from '@phosphor-icons/react';
 
 function App() {
   const [authedUser, setAuthedUser] = useState(null);
+  const [initialize, setInitialize] = useState(true);
 
   const onLoginSuccess = async ({ accessToken }) => {
     putAccessToken(accessToken);
@@ -22,8 +23,14 @@ function App() {
   };
 
   const userData = async () => {
-    const { data } = await getUserLogged();
-    setAuthedUser(data);
+    try {
+      const { data } = await getUserLogged();
+      setAuthedUser(data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setInitialize(false);
+    }
   };
 
   useEffect(() => {
@@ -40,12 +47,18 @@ function App() {
 
   const handleLogout = () => {
     if (confirm('apakah kamu yakin?')) {
+      setAuthedUser(null);
       localStorage.removeItem('accessToken');
+      putAccessToken('');
       window.location = '/';
     }
   };
 
   console.log(authedUser);
+
+  if (initialize) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider value={authContextValue}>

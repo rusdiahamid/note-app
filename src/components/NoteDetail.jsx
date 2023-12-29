@@ -80,9 +80,9 @@ NoteDetail.propTypes = {
   createdAt: PropTypes.string,
   body: PropTypes.string,
   archived: PropTypes.bool,
-  onDelete: PropTypes.func,
-  onArchive: PropTypes.func,
-  onUnArchive: PropTypes.func,
+  onDelete: PropTypes.func.isRequired,
+  onArchive: PropTypes.func.isRequired,
+  onUnArchive: PropTypes.func.isRequired,
 };
 
 export default NoteDetail;
