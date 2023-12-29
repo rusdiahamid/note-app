@@ -37,7 +37,7 @@ function NotesList({ notes, searchQuery }) {
 }
 
 NotesList.propTypes = {
-  notes: PropTypes.array.isRequired,
+  notes: PropTypes.array,
   searchQuery: PropTypes.string,
 };
 

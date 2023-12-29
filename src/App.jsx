@@ -6,22 +6,71 @@ import ArchivePage from './pages/ArchivePage';
 import NotFound from './pages/NotFound';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import { useEffect, useMemo, useState } from 'react';
+import { getUserLogged, putAccessToken } from './utils/api';
+import AuthContext from './contexts/AuthContext';
+import { SignOut } from '@phosphor-icons/react';
 
 function App() {
+  const [authedUser, setAuthedUser] = useState(null);
+
+  const onLoginSuccess = async ({ accessToken }) => {
+    putAccessToken(accessToken);
+    const { data } = await getUserLogged();
+
+    setAuthedUser(data);
+  };
+
+  const userData = async () => {
+    const { data } = await getUserLogged();
+    setAuthedUser(data);
+  };
+
+  useEffect(() => {
+    userData();
+  }, []);
+
+  const authContextValue = useMemo(
+    () => ({
+      authedUser,
+      setAuthedUser,
+    }),
+    [authedUser]
+  );
+
+  const handleLogout = () => {
+    if (confirm('apakah kamu yakin?')) {
+      localStorage.removeItem('accessToken');
+      window.location = '/';
+    }
+  };
+
+  console.log(authedUser);
+
   return (
-    <>
+    <AuthContext.Provider value={authContextValue}>
       <div className="app-container">
         <header>
           <h1>
             <Link to="/">Note Apps</Link>
           </h1>
-          <div className="navigation">
+          <nav className="navigation">
             <ul>
               <li>
                 <Link to="/archive">Arsip</Link>
               </li>
             </ul>
-          </div>
+          </nav>
+          {authedUser && (
+            <button
+              className="button-logout"
+              type="button"
+              onClick={handleLogout}
+            >
+              <SignOut size={32} />
+              {authedUser.name}
+            </button>
+          )}
         </header>
         <main>
           <Routes>
@@ -31,11 +80,11 @@ function App() {
             />
             <Route
               path="/login"
-              element={<LoginPage />}
+              element={<LoginPage loginSuccess={onLoginSuccess} />}
             />
             <Route
               path="/"
-              element={<HomePage />}
+              element={authedUser ? <HomePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
             />
             <Route
               path="/archive"
@@ -56,7 +105,7 @@ function App() {
           </Routes>
         </main>
       </div>
-    </>
+    </AuthContext.Provider>
   );
 }
 

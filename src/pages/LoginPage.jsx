@@ -1,55 +1,30 @@
 import { Link } from 'react-router-dom';
-import useInput from '../hook/useInput';
+import propTypes from 'prop-types';
+
+import LoginInput from '../components/loginInput';
 import { login } from '../utils/api';
 
-const LoginPage = () => {
-  const [email, onEmailChange] = useInput('');
-  const [password, onPasswordChange] = useInput('');
+const LoginPage = ({ loginSuccess }) => {
+  const onLogin = async ({ email, password }) => {
+    const { error, data } = await login({ email, password });
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      const data = {
-        email,
-        password,
-      };
-      await login(data);
-    } catch (e) {
-      console.log(e);
+    if (!error) {
+      loginSuccess(data);
     }
   };
-
   return (
     <section className="login-page">
       <h2>Yuk, login untuk menggunakan aplikasi</h2>
-      <form
-        onSubmit={submitHandler}
-        className="input-login"
-      >
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
-          id="email"
-          value={email}
-          onChange={onEmailChange}
-          required
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="text"
-          id="password"
-          value={password}
-          onChange={onPasswordChange}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+      <LoginInput login={onLogin} />
       <p>
         Belum punya akun? <Link to="/register">Daftar disini</Link>
       </p>
     </section>
   );
+};
+
+LoginPage.propTypes = {
+  loginSuccess: propTypes.func.isRequired,
 };
 
 export default LoginPage;
