@@ -4,6 +4,7 @@ import SearchBar from '../components/SearchBar';
 import HomePageAction from '../components/HomePageAction';
 import { getArchivedNotes } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 const ArchivePage = () => {
   const [notes, setNotes] = useState([]);
@@ -38,7 +39,7 @@ const ArchivePage = () => {
         onSearch={onKeywordChandeHandler}
       />
       {loading ? (
-        <p>Loading</p>
+        <Loader />
       ) : (
         <>
           {notes.length === 0 ? (

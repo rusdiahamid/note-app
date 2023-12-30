@@ -1,10 +1,14 @@
+import { useContext } from 'react';
 import useInput from '../hooks/useInput';
 import propTypes from 'prop-types';
+import LocaleContext from '../contexts/LocaleContext';
+import { registerPage } from '../utils/content';
 const RegisterInput = ({ register }) => {
   const [name, onNameChange] = useInput('');
   const [email, onEmailChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
   const [confirmPassword, onConfirmPasswordChange] = useInput('');
+  const { locale } = useContext(LocaleContext);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -57,7 +61,7 @@ const RegisterInput = ({ register }) => {
         onChange={onConfirmPasswordChange}
         required
       />
-      <button type="submit">Register</button>
+      <button type="submit">{registerPage[locale].button}</button>
     </form>
   );
 };

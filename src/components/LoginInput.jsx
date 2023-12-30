@@ -1,7 +1,11 @@
 import propTypes from 'prop-types';
 import useInput from '../hooks/useInput';
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
+import { loginPage } from '../utils/content';
 
 const LoginInput = ({ login }) => {
+  const { locale } = useContext(LocaleContext);
   const [email, onEmailChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
 
@@ -35,7 +39,7 @@ const LoginInput = ({ login }) => {
         onChange={onPasswordChange}
         required
       />
-      <button type="submit">Login</button>
+      <button type="submit">{loginPage[locale].button}</button>
     </form>
   );
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import NotesList from '../components/NotesList';
 import SearchBar from '../components/SearchBar';
 import HomePageAction from '../components/HomePageAction';
+import Loader from '../components/Loader';
 import { getActiveNotes } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
 
@@ -38,7 +39,7 @@ const HomePage = () => {
         onSearch={onKeywordChandeHandler}
       />
       {loading ? (
-        <p>Loading</p>
+        <Loader />
       ) : (
         <>
           {notes.length === 0 ? (

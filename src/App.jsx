@@ -10,12 +10,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { getUserLogged, putAccessToken } from './utils/api';
 import AuthContext from './contexts/AuthContext';
 import ThemeContext from './contexts/ThemeContext';
-import { SignOut } from '@phosphor-icons/react';
+import LocaleContext from './contexts/LocaleContext';
+import { SignOut, Translate } from '@phosphor-icons/react';
 import ToggleTheme from './components/ToggleTheme';
 
 function App() {
   const [authedUser, setAuthedUser] = useState(null);
-  const [theme, setTheme] = useState(localStorage.getItem('theme'));
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [locale, setLocale] = useState('id');
   const [initialize, setInitialize] = useState(true);
 
   const onLoginSuccess = async ({ accessToken }) => {
@@ -56,6 +58,19 @@ function App() {
     [theme]
   );
 
+  const toggleLocale = () => {
+    setLocale((prevLocale) => {
+      return prevLocale === 'id' ? 'en' : 'id';
+    });
+  };
+
+  const localeContextValue = useMemo(() => {
+    return {
+      locale,
+      toggleLocale,
+    };
+  }, [locale]);
+
   const handleLogout = () => {
     if (confirm('apakah kamu yakin?')) {
       setAuthedUser(null);
@@ -66,7 +81,9 @@ function App() {
   };
 
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme((prevLocale) => {
+      return prevLocale === 'dark' ? 'light' : 'dark';
+    });
   };
 
   useEffect(() => {
@@ -80,65 +97,73 @@ function App() {
 
   return (
     <ThemeContext.Provider value={themeContextValue}>
-      <AuthContext.Provider value={authContextValue}>
-        <div className="app-container">
-          <header>
-            <h1>
-              <Link to="/">Note Apps</Link>
-            </h1>
-            <nav className="navigation">
-              <ul>
-                <li>
-                  <Link to="/archive">Arsip</Link>
-                </li>
-              </ul>
-            </nav>
-            <ToggleTheme onClick={toggleTheme} />
-            {authedUser && (
+      <LocaleContext.Provider value={localeContextValue}>
+        <AuthContext.Provider value={authContextValue}>
+          <div className="app-container">
+            <header>
+              <h1>
+                <Link to="/">{locale === 'id' ? 'Aplikasi catatan' : 'Notes app'}</Link>
+              </h1>
+              <nav className="navigation">
+                <ul>
+                  <li>
+                    <Link to="/archive">{locale === 'id' ? 'Arsip' : 'Archive'}</Link>
+                  </li>
+                </ul>
+              </nav>
               <button
-                className="button-logout"
-                type="button"
-                onClick={handleLogout}
+                className="toggle-locale"
+                onClick={toggleLocale}
               >
-                <SignOut size={32} />
-                {authedUser.name}
+                <Translate size={32} />
               </button>
-            )}
-          </header>
-          <main>
-            <Routes>
-              <Route
-                path="/register"
-                element={<RegisterPage />}
-              />
-              <Route
-                path="/login"
-                element={<LoginPage loginSuccess={onLoginSuccess} />}
-              />
-              <Route
-                path="/"
-                element={authedUser ? <HomePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
-              />
-              <Route
-                path="/archive"
-                element={<ArchivePage />}
-              />
-              <Route
-                path="/note/:id"
-                element={<DetailPageWrapper />}
-              />
-              <Route
-                path="/new"
-                element={<AddNewPage />}
-              />
-              <Route
-                path="/*"
-                element={<NotFound />}
-              />
-            </Routes>
-          </main>
-        </div>
-      </AuthContext.Provider>
+              <ToggleTheme onClick={toggleTheme} />
+              {authedUser && (
+                <button
+                  className="button-logout"
+                  type="button"
+                  onClick={handleLogout}
+                >
+                  <SignOut size={32} />
+                  {authedUser.name}
+                </button>
+              )}
+            </header>
+            <main>
+              <Routes>
+                <Route
+                  path="/register"
+                  element={<RegisterPage />}
+                />
+                <Route
+                  path="/login"
+                  element={<LoginPage loginSuccess={onLoginSuccess} />}
+                />
+                <Route
+                  path="/"
+                  element={authedUser ? <HomePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
+                />
+                <Route
+                  path="/archive"
+                  element={<ArchivePage />}
+                />
+                <Route
+                  path="/note/:id"
+                  element={<DetailPageWrapper />}
+                />
+                <Route
+                  path="/new"
+                  element={<AddNewPage />}
+                />
+                <Route
+                  path="/*"
+                  element={<NotFound />}
+                />
+              </Routes>
+            </main>
+          </div>
+        </AuthContext.Provider>
+      </LocaleContext.Provider>
     </ThemeContext.Provider>
   );
 }

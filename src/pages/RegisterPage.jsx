@@ -1,9 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterInput from '../components/RegisterInput';
 import { register } from '../utils/api';
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
+import { registerPage } from '../utils/content';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { locale } = useContext(LocaleContext);
 
   const onRegister = async (user) => {
     const { error } = await register(user);
@@ -13,10 +17,10 @@ const RegisterPage = () => {
   };
   return (
     <section className="register-page">
-      <h2>Isi form untuk mendaftar akun.</h2>
+      <h2>{registerPage[locale].header}</h2>
       <RegisterInput register={onRegister} />
       <p>
-        Sudah punya akun? <Link to="/login">Login disini</Link>
+        {registerPage[locale].footer} <Link to="/login">{registerPage[locale].link}</Link>
       </p>
     </section>
   );

@@ -3,8 +3,12 @@ import propTypes from 'prop-types';
 
 import LoginInput from '../components/loginInput';
 import { login } from '../utils/api';
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
+import { loginPage } from '../utils/content';
 
 const LoginPage = ({ loginSuccess }) => {
+  const { locale } = useContext(LocaleContext);
   const onLogin = async ({ email, password }) => {
     const { error, data } = await login({ email, password });
 
@@ -14,10 +18,10 @@ const LoginPage = ({ loginSuccess }) => {
   };
   return (
     <section className="login-page">
-      <h2>Yuk, login untuk menggunakan aplikasi</h2>
+      <h2>{loginPage[locale].header}</h2>
       <LoginInput login={onLogin} />
       <p>
-        Belum punya akun? <Link to="/register">Daftar disini</Link>
+        {loginPage[locale].footer} <Link to="/register">{loginPage[locale].link}</Link>
       </p>
     </section>
   );
