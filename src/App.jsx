@@ -9,10 +9,13 @@ import LoginPage from './pages/LoginPage';
 import { useEffect, useMemo, useState } from 'react';
 import { getUserLogged, putAccessToken } from './utils/api';
 import AuthContext from './contexts/AuthContext';
+import ThemeContext from './contexts/ThemeContext';
 import { SignOut } from '@phosphor-icons/react';
+import ToggleTheme from './components/ToggleTheme';
 
 function App() {
   const [authedUser, setAuthedUser] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme'));
   const [initialize, setInitialize] = useState(true);
 
   const onLoginSuccess = async ({ accessToken }) => {
@@ -45,6 +48,14 @@ function App() {
     [authedUser]
   );
 
+  const themeContextValue = useMemo(
+    () => ({
+      theme,
+      setTheme,
+    }),
+    [theme]
+  );
+
   const handleLogout = () => {
     if (confirm('apakah kamu yakin?')) {
       setAuthedUser(null);
@@ -54,71 +65,81 @@ function App() {
     }
   };
 
-  console.log(authedUser);
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  useEffect(() => {
+    window.document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   if (initialize) {
     return null;
   }
 
   return (
-    <AuthContext.Provider value={authContextValue}>
-      <div className="app-container">
-        <header>
-          <h1>
-            <Link to="/">Note Apps</Link>
-          </h1>
-          <nav className="navigation">
-            <ul>
-              <li>
-                <Link to="/archive">Arsip</Link>
-              </li>
-            </ul>
-          </nav>
-          {authedUser && (
-            <button
-              className="button-logout"
-              type="button"
-              onClick={handleLogout}
-            >
-              <SignOut size={32} />
-              {authedUser.name}
-            </button>
-          )}
-        </header>
-        <main>
-          <Routes>
-            <Route
-              path="/register"
-              element={<RegisterPage />}
-            />
-            <Route
-              path="/login"
-              element={<LoginPage loginSuccess={onLoginSuccess} />}
-            />
-            <Route
-              path="/"
-              element={authedUser ? <HomePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
-            />
-            <Route
-              path="/archive"
-              element={<ArchivePage />}
-            />
-            <Route
-              path="/note/:id"
-              element={<DetailPageWrapper />}
-            />
-            <Route
-              path="/new"
-              element={<AddNewPage />}
-            />
-            <Route
-              path="/*"
-              element={<NotFound />}
-            />
-          </Routes>
-        </main>
-      </div>
-    </AuthContext.Provider>
+    <ThemeContext.Provider value={themeContextValue}>
+      <AuthContext.Provider value={authContextValue}>
+        <div className="app-container">
+          <header>
+            <h1>
+              <Link to="/">Note Apps</Link>
+            </h1>
+            <nav className="navigation">
+              <ul>
+                <li>
+                  <Link to="/archive">Arsip</Link>
+                </li>
+              </ul>
+            </nav>
+            <ToggleTheme onClick={toggleTheme} />
+            {authedUser && (
+              <button
+                className="button-logout"
+                type="button"
+                onClick={handleLogout}
+              >
+                <SignOut size={32} />
+                {authedUser.name}
+              </button>
+            )}
+          </header>
+          <main>
+            <Routes>
+              <Route
+                path="/register"
+                element={<RegisterPage />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage loginSuccess={onLoginSuccess} />}
+              />
+              <Route
+                path="/"
+                element={authedUser ? <HomePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
+              />
+              <Route
+                path="/archive"
+                element={<ArchivePage />}
+              />
+              <Route
+                path="/note/:id"
+                element={<DetailPageWrapper />}
+              />
+              <Route
+                path="/new"
+                element={<AddNewPage />}
+              />
+              <Route
+                path="/*"
+                element={<NotFound />}
+              />
+            </Routes>
+          </main>
+        </div>
+      </AuthContext.Provider>
+    </ThemeContext.Provider>
   );
 }
 
