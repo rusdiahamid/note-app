@@ -3,23 +3,28 @@ import parse from 'html-react-parser';
 import { showFormattedDate } from '../utils';
 import { ArchiveBox, Trash, UploadSimple } from '@phosphor-icons/react';
 import Swal from 'sweetalert2';
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
+import { handleDeleteModal } from '../utils/content';
 
 const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive, onUnArchive }) => {
+  const { locale } = useContext(LocaleContext);
+
   const handleDelete = () => {
     Swal.fire({
-      title: 'Apakah kamu yakin?',
-      text: 'Catatan ini akan dihapus permanen',
+      title: handleDeleteModal[locale].title,
+      text: handleDeleteModal[locale].text,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Hapus',
-      cancelButtonText: 'Batal',
+      confirmButtonText: handleDeleteModal[locale].confirm,
+      cancelButtonText: handleDeleteModal[locale].cancel,
     }).then((result) => {
       if (result.isConfirmed) {
         onDelete(id);
 
-        Swal.fire('Dihapus!', 'Catatan berhasil dihapus.', 'success');
+        Swal.fire(handleDeleteModal[locale].deletedTitle, handleDeleteModal[locale].deletedSubtitle, 'success');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Batal', 'Catatan aman :)', 'info');
+        Swal.fire(handleDeleteModal[locale].canceledTitle, handleDeleteModal[locale].canceledSubtitle, 'info');
       }
     });
   };

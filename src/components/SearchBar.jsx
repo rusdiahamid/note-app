@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const SearchBar = ({ page, onSearch }) => {
+const SearchBar = ({ placeholder, onSearch }) => {
   const onSearchChange = (event) => {
     const searchQuery = event.target.value;
     onSearch(searchQuery);
@@ -8,10 +8,9 @@ const SearchBar = ({ page, onSearch }) => {
 
   return (
     <div className="search-bar">
-      <h2>Catatan {page}</h2>
       <input
         type="search"
-        placeholder="Cari berdasarkan judul..."
+        placeholder={placeholder}
         onChange={onSearchChange}
       />
     </div>
@@ -19,7 +18,7 @@ const SearchBar = ({ page, onSearch }) => {
 };
 
 SearchBar.propTypes = {
-  page: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   onSearch: PropTypes.func,
 };
 

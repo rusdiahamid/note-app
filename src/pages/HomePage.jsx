@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import NotesList from '../components/NotesList';
 import SearchBar from '../components/SearchBar';
 import HomePageAction from '../components/HomePageAction';
 import Loader from '../components/Loader';
 import { getActiveNotes } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
+import LocaleContext from '../contexts/LocaleContext';
+import { homePage } from '../utils/content';
 
 const HomePage = () => {
+  const { locale } = useContext(LocaleContext);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,8 +37,9 @@ const HomePage = () => {
 
   return (
     <section>
+      <h2>{homePage[locale].page}</h2>
       <SearchBar
-        page="Aktif"
+        placeholder={homePage[locale].placeholder}
         onSearch={onKeywordChandeHandler}
       />
       {loading ? (

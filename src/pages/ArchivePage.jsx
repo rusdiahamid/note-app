@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import NotesList from '../components/NotesList';
 import SearchBar from '../components/SearchBar';
 import HomePageAction from '../components/HomePageAction';
 import { getArchivedNotes } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
+import LocaleContext from '../contexts/LocaleContext';
 import Loader from '../components/Loader';
+import { archivePage } from '../utils/content';
 
 const ArchivePage = () => {
+  const { locale } = useContext(LocaleContext);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,8 +37,9 @@ const ArchivePage = () => {
 
   return (
     <section>
+      <h2>{archivePage[locale].page}</h2>
       <SearchBar
-        page="Arsip"
+        placeholder={archivePage[locale].placeholder}
         onSearch={onKeywordChandeHandler}
       />
       {loading ? (
