@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
-import { showFormattedDate } from '../utils';
 import { ArchiveBox, Trash, UploadSimple } from '@phosphor-icons/react';
 import Swal from 'sweetalert2';
 import { useContext } from 'react';
+
+import { showFormattedDate } from '../utils';
 import LocaleContext from '../contexts/LocaleContext';
-import { handleDeleteModal } from '../utils/content';
+import { handleArchiveModal, handleDeleteModal, handleUnarchiveModal } from '../utils/content';
 
 const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive, onUnArchive }) => {
   const { locale } = useContext(LocaleContext);
@@ -31,8 +32,8 @@ const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive,
 
   const handleArchive = () => {
     Swal.fire({
-      title: 'Sukses',
-      text: 'Catatan berhasil diarsipkan.',
+      title: handleArchiveModal[locale].title,
+      text: handleArchiveModal[locale].text,
       icon: 'success',
     });
     onArchive(id);
@@ -40,8 +41,8 @@ const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive,
 
   const handleUnArchive = () => {
     Swal.fire({
-      title: 'Sukses',
-      text: 'Catatan berhasil dipulihkan.',
+      title: handleUnarchiveModal[locale].title,
+      text: handleUnarchiveModal[locale].text,
       icon: 'success',
     });
     onUnArchive(id);
@@ -50,7 +51,7 @@ const NoteDetail = ({ id, title, createdAt, body, archived, onDelete, onArchive,
   return (
     <div className="detail-page">
       <h1 className="detail-page__title">{title}</h1>
-      <div className="detail-page__createdAt">{showFormattedDate(createdAt)}</div>
+      <div className="detail-page__createdAt">{showFormattedDate(createdAt, locale)}</div>
       <div className="detail-page__body">{parse(body)}</div>
       <div className="detail-page__action">
         <div className="action">

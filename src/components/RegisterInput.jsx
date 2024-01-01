@@ -10,7 +10,7 @@ const RegisterInput = ({ register }) => {
   const [confirmPassword, onConfirmPasswordChange] = useInput('');
   const { locale } = useContext(LocaleContext);
 
-  const submitHandler = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
 
     register({
@@ -22,7 +22,7 @@ const RegisterInput = ({ register }) => {
 
   return (
     <form
-      onSubmit={submitHandler}
+      onSubmit={onSubmit}
       className="input-register"
     >
       <label htmlFor="name">Nama</label>

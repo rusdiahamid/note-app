@@ -1,4 +1,10 @@
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
+import { notFoundPage } from '../utils/content';
+
 const NotFound = () => {
+  const { locale } = useContext(LocaleContext);
+
   return (
     <div className="not-found">
       <svg
@@ -199,7 +205,7 @@ const NotFound = () => {
           fill="#cacaca"
         />
       </svg>
-      <h2>Page not found</h2>
+      <p>{notFoundPage[locale].text}</p>
     </div>
   );
 };

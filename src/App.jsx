@@ -11,13 +11,14 @@ import { getUserLogged, putAccessToken } from './utils/api';
 import AuthContext from './contexts/AuthContext';
 import ThemeContext from './contexts/ThemeContext';
 import LocaleContext from './contexts/LocaleContext';
-import { SignOut, Translate } from '@phosphor-icons/react';
+import { Translate } from '@phosphor-icons/react';
 import ToggleTheme from './components/ToggleTheme';
+import LogoutButton from './components/LogoutButton';
 
 function App() {
   const [authedUser, setAuthedUser] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
-  const [locale, setLocale] = useState('id');
+  const [locale, setLocale] = useState(localStorage.getItem('locale') || 'id');
   const [initialize, setInitialize] = useState(true);
 
   const onLoginSuccess = async ({ accessToken }) => {
@@ -71,15 +72,6 @@ function App() {
     };
   }, [locale]);
 
-  const handleLogout = () => {
-    if (confirm('apakah kamu yakin?')) {
-      setAuthedUser(null);
-      localStorage.removeItem('accessToken');
-      putAccessToken('');
-      window.location = '/';
-    }
-  };
-
   const toggleTheme = () => {
     setTheme((prevLocale) => {
       return prevLocale === 'dark' ? 'light' : 'dark';
@@ -89,7 +81,8 @@ function App() {
   useEffect(() => {
     window.document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-  }, [theme]);
+    localStorage.setItem('locale', locale);
+  }, [theme, locale]);
 
   if (initialize) {
     return null;
@@ -104,13 +97,15 @@ function App() {
               <h1>
                 <Link to="/">{locale === 'id' ? 'Aplikasi catatan' : 'Notes app'}</Link>
               </h1>
-              <nav className="navigation">
-                <ul>
-                  <li>
-                    <Link to="/archive">{locale === 'id' ? 'Arsip' : 'Archive'}</Link>
-                  </li>
-                </ul>
-              </nav>
+              {authedUser && (
+                <nav className="navigation">
+                  <ul>
+                    <li>
+                      <Link to="/archive">{locale === 'id' ? 'Arsip' : 'Archive'}</Link>
+                    </li>
+                  </ul>
+                </nav>
+              )}
               <button
                 className="toggle-locale"
                 onClick={toggleLocale}
@@ -118,16 +113,7 @@ function App() {
                 <Translate size={32} />
               </button>
               <ToggleTheme onClick={toggleTheme} />
-              {authedUser && (
-                <button
-                  className="button-logout"
-                  type="button"
-                  onClick={handleLogout}
-                >
-                  <SignOut size={32} />
-                  {authedUser.name}
-                </button>
-              )}
+              {authedUser && <LogoutButton />}
             </header>
             <main>
               <Routes>

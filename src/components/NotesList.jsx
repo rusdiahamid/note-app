@@ -2,15 +2,16 @@ import { Link } from 'react-router-dom';
 import parse from 'html-react-parser';
 import PropTypes from 'prop-types';
 import { showFormattedDate } from '../utils';
+import Empty from './Empty';
+import { useContext } from 'react';
+import LocaleContext from '../contexts/LocaleContext';
 
 function NotesList({ notes, searchQuery }) {
+  const { locale } = useContext(LocaleContext);
+
   const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchQuery.toLowerCase()));
   if (!filteredNotes.length) {
-    return (
-      <div className="notes-list-empty">
-        <p>Tidak ada catatan</p>
-      </div>
-    );
+    return <Empty />;
   }
 
   return (
@@ -27,7 +28,7 @@ function NotesList({ notes, searchQuery }) {
             >
               {note.title}
             </Link>
-            <div className="note-item__createdAt">{showFormattedDate(note.createdAt)}</div>
+            <div className="note-item__createdAt">{showFormattedDate(note.createdAt, locale)}</div>
             <div className="note-item__body">{parse(note.body)}</div>
           </div>
         );

@@ -46,14 +46,10 @@ const HomePage = () => {
         <Loader />
       ) : (
         <>
-          {notes.length === 0 ? (
-            <p>empty</p>
-          ) : (
-            <NotesList
-              notes={notes}
-              searchQuery={keyword}
-            />
-          )}
+          <NotesList
+            notes={notes}
+            searchQuery={keyword}
+          />
         </>
       )}
       <HomePageAction />

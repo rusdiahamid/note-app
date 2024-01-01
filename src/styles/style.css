@@ -76,6 +76,16 @@ main {
 .notes-list-empty {
   margin-top: 32px;
   padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.notes-list-empty svg {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 32px;
 }
 
 .notes-list-empty p {
