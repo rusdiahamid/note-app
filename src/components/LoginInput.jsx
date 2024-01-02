@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import LocaleContext from '../contexts/LocaleContext';
 import { loginPage } from '../utils/content';
 
-const LoginInput = ({ login }) => {
+const LoginInput = ({ login, disabled }) => {
   const { locale } = useContext(LocaleContext);
   const [email, onEmailChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
@@ -29,6 +29,7 @@ const LoginInput = ({ login }) => {
         id="email"
         value={email}
         onChange={onEmailChange}
+        disabled={disabled}
         required
       />
       <label htmlFor="password">Password</label>
@@ -37,15 +38,22 @@ const LoginInput = ({ login }) => {
         id="password"
         value={password}
         onChange={onPasswordChange}
+        disabled={disabled}
         required
       />
-      <button type="submit">{loginPage[locale].button}</button>
+      <button
+        type="submit"
+        disabled={disabled}
+      >
+        {loginPage[locale].button}
+      </button>
     </form>
   );
 };
 
 LoginInput.propTypes = {
   login: propTypes.func.isRequired,
+  disabled: propTypes.bool.isRequired,
 };
 
 export default LoginInput;

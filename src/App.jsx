@@ -1,4 +1,10 @@
 import { Link, Route, Routes } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+
+import ToggleTheme from './components/ToggleTheme';
+import ToggleLocale from './components/ToggleLocale';
+import LogoutButton from './components/LogoutButton';
+
 import DetailPageWrapper from './pages/DetailPage';
 import AddNewPage from './pages/AddNewPage';
 import HomePage from './pages/HomePage';
@@ -6,14 +12,12 @@ import ArchivePage from './pages/ArchivePage';
 import NotFound from './pages/NotFound';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
-import { useEffect, useMemo, useState } from 'react';
 import { getUserLogged, putAccessToken } from './utils/api';
+
 import AuthContext from './contexts/AuthContext';
 import ThemeContext from './contexts/ThemeContext';
 import LocaleContext from './contexts/LocaleContext';
-import { Translate } from '@phosphor-icons/react';
-import ToggleTheme from './components/ToggleTheme';
-import LogoutButton from './components/LogoutButton';
+import Loader from './components/Loader';
 
 function App() {
   const [authedUser, setAuthedUser] = useState(null);
@@ -51,10 +55,16 @@ function App() {
     [authedUser]
   );
 
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      return prevTheme === 'dark' ? 'light' : 'dark';
+    });
+  };
+
   const themeContextValue = useMemo(
     () => ({
       theme,
-      setTheme,
+      toggleTheme,
     }),
     [theme]
   );
@@ -72,12 +82,6 @@ function App() {
     };
   }, [locale]);
 
-  const toggleTheme = () => {
-    setTheme((prevLocale) => {
-      return prevLocale === 'dark' ? 'light' : 'dark';
-    });
-  };
-
   useEffect(() => {
     window.document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -85,7 +89,7 @@ function App() {
   }, [theme, locale]);
 
   if (initialize) {
-    return null;
+    return <Loader />;
   }
 
   return (
@@ -106,13 +110,8 @@ function App() {
                   </ul>
                 </nav>
               )}
-              <button
-                className="toggle-locale"
-                onClick={toggleLocale}
-              >
-                <Translate size={32} />
-              </button>
-              <ToggleTheme onClick={toggleTheme} />
+              <ToggleLocale />
+              <ToggleTheme />
               {authedUser && <LogoutButton />}
             </header>
             <main>
@@ -131,15 +130,15 @@ function App() {
                 />
                 <Route
                   path="/archive"
-                  element={<ArchivePage />}
+                  element={authedUser ? <ArchivePage /> : <LoginPage loginSuccess={onLoginSuccess} />}
                 />
                 <Route
                   path="/note/:id"
-                  element={<DetailPageWrapper />}
+                  element={authedUser ? <DetailPageWrapper /> : <LoginPage loginSuccess={onLoginSuccess} />}
                 />
                 <Route
                   path="/new"
-                  element={<AddNewPage />}
+                  element={authedUser ? <AddNewPage /> : <LoginPage loginSuccess={onLoginSuccess} />}
                 />
                 <Route
                   path="/*"
