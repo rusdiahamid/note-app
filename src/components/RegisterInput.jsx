@@ -1,8 +1,11 @@
 import { useContext } from 'react';
-import useInput from '../hooks/useInput';
 import propTypes from 'prop-types';
+import Swal from 'sweetalert2';
+
+import useInput from '../hooks/useInput';
 import LocaleContext from '../contexts/LocaleContext';
 import { registerPage } from '../utils/content';
+
 const RegisterInput = ({ register, disabled }) => {
   const [name, onNameChange] = useInput('');
   const [email, onEmailChange] = useInput('');
@@ -13,11 +16,24 @@ const RegisterInput = ({ register, disabled }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    register({
-      name,
-      email,
-      password,
-    });
+    if (password !== confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Password and Confirm password does not match',
+      });
+    } else {
+      Swal.fire({
+        title: 'Success',
+        text: 'Register Successfully',
+        icon: 'success',
+      });
+      register({
+        name,
+        email,
+        password,
+      });
+    }
   };
 
   return (
@@ -29,7 +45,6 @@ const RegisterInput = ({ register, disabled }) => {
       <input
         type="text"
         id="name"
-        placeholder="Name"
         value={name}
         onChange={onNameChange}
         disabled={disabled}
@@ -39,7 +54,6 @@ const RegisterInput = ({ register, disabled }) => {
       <input
         type="text"
         id="email"
-        placeholder="Email"
         value={email}
         onChange={onEmailChange}
         disabled={disabled}
@@ -47,9 +61,8 @@ const RegisterInput = ({ register, disabled }) => {
       />
       <label htmlFor="email">Password</label>
       <input
-        type="text"
+        type="password"
         id="password"
-        placeholder="Password"
         value={password}
         onChange={onPasswordChange}
         disabled={disabled}
@@ -57,9 +70,8 @@ const RegisterInput = ({ register, disabled }) => {
       />
       <label htmlFor="confirm-password">Confirm Password</label>
       <input
-        type="text"
+        type="password"
         id="confirm-password"
-        placeholder="Confirm Password"
         value={confirmPassword}
         onChange={onConfirmPasswordChange}
         disabled={disabled}

@@ -28,7 +28,7 @@ const RegisterPage = () => {
       <h2>{registerPage[locale].header}</h2>
       <RegisterInput
         register={onRegister}
-        disable={disabled}
+        disabled={disabled}
       />
       <p>
         {registerPage[locale].footer} <Link to="/login">{registerPage[locale].link}</Link>
