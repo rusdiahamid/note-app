@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate, useParams } from 'react-router-dom';
 import NoteDetail from '../components/NoteDetail';
 import { archiveNote, deleteNote, getNote, unarchiveNote } from '../utils/api';
@@ -55,10 +54,5 @@ function DetailPage() {
     </section>
   );
 }
-
-DetailPage.propTypes = {
-  id: PropTypes.string,
-  navigate: PropTypes.func,
-};
 
 export default DetailPage;
